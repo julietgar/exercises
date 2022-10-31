@@ -1,0 +1,74 @@
+> Firstable, we can have an event called "logger" that is dispatched each time there is an error in the web application.
+
+> This "logger" event can contain the function called "logError" that receive an argument with the specific error.
+
+> This "logError" function is created to appends the error to the end of a log file.
+
+    > We have to do it in a synchronous method or queue to avoid overlap.
+
+    > This log file is stored and/or updated in a specific place in the file system on the server where is running the web application.
+
+    > The error that is appended in the log file, is registered with a datetime and the error message.
+
+    > In the function, we have to check if there are more than ten errors in the last minute each one minute.
+
+        > We can check this reading the log file and get the last 11 errors registered.
+
+        > With these last 11 errors, we have to check the last one of them to get the datetime of the error.
+
+        > We can get the datetime using some regex expression and compare this datetime with the current datetime in UTC.
+
+        > For other side, we have another event that contain a function that send an email notification.
+
+        > If the condition is true or there are more than ten errors in one minute, we can dispatch the event to send an email notification.
+
+        > Also, we have to check that we have to receive only one email notificacion per minute.
+
+            > To resolve this, we can have a synchronous method or queue that is in charged in prevent to send more one email notification adding a limit of time to it.
+
+--------
+
+1) logger event:
+
+    logError(error) function:
+
+        sync/queue function:
+
+            store/update error(datetimeUtc, errorMsg) function
+
+        get lastLogs(11) function:
+
+            get last errors in the last minute
+
+        get lastOneError(lastErrors) function:
+
+            get lastOne error
+
+            get datetime of the last error in UTC
+
+        get isThereAlarm(datetimeLastError, quantityErrors) function:
+
+            check datetimeLastError and currentDatetime are the same and if there are more than 10 errors
+
+        isThereAlarm is true, dispatch emailNotification event
+
+2) emailNotification event:
+
+    sendEmail function:
+
+        sync/queue function:
+
+            check and limit send one email per minute
+
+
+
+
+
+
+
+
+
+
+
+
+
